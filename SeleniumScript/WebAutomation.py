@@ -1,13 +1,16 @@
+
 from selenium import webdriver
 import time
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-from SeleniumScript import Credentials as Cd
+from SeleniumScript import Credentials
+import os
 
+Password = os.environ.get('User_Password')
+#Password = Credentials.password()
 
-userName = Cd.Email()
-Password = "s9316246c"
-Emails = "matthew3169@gmail.com"
+# userName = "matthew3169@gmail.com
+# Emails = "matthew3169@gmail.com"
 # Subject = "Project on Selenium WebDriver"
 # Message = "Good Evening Zi Qing, If you receive this email it would mean that the automation is executed " \
 #           "successfully. Thank you <br> Warm Regards, <br> Low Zi Qing"
@@ -50,5 +53,5 @@ Emails = "matthew3169@gmail.com"
 # inputs("//*[@id=':qr']", Message)
 # tabEnter(1)
 #
-
-
+#
+#
