@@ -1,13 +1,14 @@
-
-from selenium import webdriver
-import time
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
+from SeleniumScript import PasswordEncodeManager
 from SeleniumScript import Credentials
 import os
 
-Password = os.environ.get('User_Password')
-#Password = Credentials.password()
+Password1 = os.getenv("User_Password")
+Password2 = Credentials.password()
+encodedPassword = PasswordEncodeManager.password()
+#Password3 = PasswordEncodeManager.passwordDecoder(encodedPassword)
+
+print(Password1)
+
 
 # userName = "matthew3169@gmail.com
 # Emails = "matthew3169@gmail.com"
