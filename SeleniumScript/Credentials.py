@@ -1,6 +1,3 @@
-import py_compile
-py_compile.compile('Credentials.py')
-
 
 def email():
     Email = "matthew3169@gmail.com"
