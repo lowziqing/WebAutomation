@@ -1,73 +1,69 @@
-import os
 import marshal
-import time
 import datetime
-from SeleniumScript import PasswordEncodeManager
-from SeleniumScript import Credentials
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from time import sleep
+from SeleniumScript import PYCCompiler
+from SeleniumScript import SeleniumFunctions
+from SeleniumScript import TimeManager
 from selenium.webdriver.common.action_chains import ActionChains
 
+Com = PYCCompiler.Compiler()
+SF = SeleniumFunctions.Functions()
+TM = TimeManager.TimeManager()
 now = datetime.datetime.now()
-currentDateTime = now.strftime("%Y-%m-%d %H:%M")
+Com.compileCredentials()
+driver = SF.getDriver()
 
-s = open('SeleniumScript/Credential.pyc', 'rb')
+s = open('SeleniumScript/Credentials.pyc', 'rb')
 s.seek(12)
 code_object = marshal.load(s)
 exec(code_object)
 
-# Password1 = os.getenv("User_Password")
-# Password2 = password()
-# encodedPassword = PasswordEncodeManager.password()
-# Password3 = PasswordEncodeManager.passwordDecoder(encodedPassword)
-#
-# print(Password1)
-# print(Password2)
-# print(Password3)
-
-userName = "matthew3169@gmail.com"
 Emails = "matthew3169@gmail.com"
-Subject = "Project on Automation" + currentDateTime
+Subject = "Project on Automation" + TM.getDateTime()
 Message = "Good Evening Zi Qing, If you receive this email it would mean that the automation is executed " \
           "successfully. Thank you Warm Regards, Low Zi Qing"
 
-
-def inputs(xpath, inputs):
-    elem = driver.find_element_by_xpath(xpath)
-    elem.send_keys(inputs)
-    time.sleep(2)
-    driver.implicitly_wait(2)
-
-
-def tabEnter(number):
-    action = ActionChains(driver)
-    action.send_keys(Keys.TAB * number)
-    action.send_keys(Keys.ENTER)
-    time.sleep(0.2)
-    action.perform()
-    time.sleep(0.5)
-
-
-driver = webdriver.Chrome("C:\\Selenium\\chromedriver.exe")
 actions = ActionChains(driver)
 driver.get("https://www.google.com/gmail/")
 driver.implicitly_wait(10)
 
-inputs("//input[@type='email']", userName)
-tabEnter(3)
+SF.inputs("//input[@type='email']", Gmail())
+SF.tabEnter(3)
 
-inputs("//*[@id='password']/div[1]/div/div[1]/input", password())
-tabEnter(2)
-time.sleep(20)
-tabEnter(11)
-#elem = driver.find_element_by_xpath("//*[@id=':ko']/div/div | //*[@id=':kn']/div/div")
-#elem.click()
-time.sleep(2)
+SF.inputs("//*[@id='password']/div[1]/div/div[1]/input", Gmail_password())
+SF.tabEnter(2)
+sleep(20)
+SF.tabEnter(11)
+sleep(2)
 
-inputs("//*[@id=':q4']", Emails)
-inputs("//*[@id=':pm']", Subject)
-inputs("//*[@id=':qr']", Message)
-tabEnter(1)
+SF.inputs("//*[@id=':q4']", Emails)
+SF.inputs("//*[@id=':pm']", Subject)
+SF.inputs("//*[@id=':qr']", Message)
+SF.tabEnter(1)
+SF.newTab("https://outlook.live.com/owa/", 1)
+
+SF.tabEnter(8)
+SF.inputs("//input[@type='email']", Hotmail())
+SF.tabEnter(2)
+SF.inputs("//input[@type='password']", Hotmail_password())
+SF.tabEnter(3)
+sleep(20)
+SF.newTab("https://www.fireeye.com/cyber-map/threat-map.html", 2)
+
+counter = 0
+
+while True:
+    driver.switch_to.window(driver.window_handles[counter])
+    sleep(30)
+    counter = counter + 1
+    if counter > 2:
+        counter = 0
+    if TM.Time >= 1000 and TM.Time <= 1510:
+        SF.newTab(TM.checkDays(TM.Day), 3)
+
+
+
+
 
 
 
