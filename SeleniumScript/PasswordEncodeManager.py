@@ -42,3 +42,12 @@ def password():
     Password = b'czkzMTYyNDZj'
     return Password
 
+
+# Password1 = os.getenv("User_Password")
+# Password2 = password()
+# encodedPassword = PasswordEncodeManager.password()
+# Password3 = PasswordEncodeManager.passwordDecoder(encodedPassword)
+#
+# print(Password1)
+# print(Password2)
+# print(Password3)

@@ -1,5 +1,6 @@
 import datetime
 
+
 class TimeManager:
 
     def getDateTime(self):
@@ -7,6 +8,7 @@ class TimeManager:
         currentDateTime = now.strftime("%Y-%m-%d %H:%M")
         currentTime = now.strftime("%H%M")
         currentDay = now.strftime("%A")
+        return {'currentDateTime': currentDateTime, 'currentTime': currentTime, 'currentDay': currentDay}
 
     def checkDays(self, days):
         websites = {

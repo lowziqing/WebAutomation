@@ -6,26 +6,30 @@ from SeleniumScript import SeleniumFunctions
 from SeleniumScript import TimeManager
 from selenium.webdriver.common.action_chains import ActionChains
 
+# Calling modules from other files
 Com = PYCCompiler.Compiler()
 SF = SeleniumFunctions.Functions()
 TM = TimeManager.TimeManager()
 now = datetime.datetime.now()
 Com.compileCredentials()
-driver = SF.getDriver()
 
+# instantiate object to call PYC file
 s = open('SeleniumScript/Credentials.pyc', 'rb')
 s.seek(12)
 code_object = marshal.load(s)
 exec(code_object)
 
+# variables for Gmail input
 Emails = "matthew3169@gmail.com"
-Subject = "Project on Automation" + TM.getDateTime()
+Subject = "Project on Automation" + TM.getDateTime()['currentDateTime']
 Message = "Good Evening Zi Qing, If you receive this email it would mean that the automation is executed " \
           "successfully. Thank you Warm Regards, Low Zi Qing"
+counter = 0
 
-actions = ActionChains(driver)
-driver.get("https://www.google.com/gmail/")
-driver.implicitly_wait(10)
+# Calling google chrome and inputting website.
+actions = ActionChains(SF.getDriver())
+SF.getDriver().get("https://www.google.com/gmail/")
+SF.getDriver().implicitly_wait(10)
 
 SF.inputs("//input[@type='email']", Gmail())
 SF.tabEnter(3)
@@ -50,16 +54,14 @@ SF.tabEnter(3)
 sleep(20)
 SF.newTab("https://www.fireeye.com/cyber-map/threat-map.html", 2)
 
-counter = 0
-
 while True:
-    driver.switch_to.window(driver.window_handles[counter])
-    sleep(30)
+    SF.getDriver().switch_to.window(SF.getDriver().window_handles[counter])
+    sleep(10)
     counter = counter + 1
     if counter > 2:
         counter = 0
-    if TM.Time >= 1000 and TM.Time <= 1510:
-        SF.newTab(TM.checkDays(TM.Day), 3)
+    if int(TM.getDateTime()['currentTime']) >= 1000 and int(TM.getDateTime()['currentTime']) <= 1510:
+        SF.newTab(TM.checkDays(TM.getDateTime()['currentDay']), 3)
 
 
 
