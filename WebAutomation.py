@@ -15,9 +15,9 @@ Com.compileCredentials()
 
 # instantiate object to call PYC file
 s = open('SeleniumScript/Credentials.pyc', 'rb')
-s.seek(12)
+s.seek(8)
 code_object = marshal.load(s)
-exec(code_object)
+exec code_object
 
 # variables for Gmail input
 Emails = "matthew3169@gmail.com"
@@ -29,7 +29,7 @@ counter = 0
 # Calling google chrome and inputting website.
 actions = ActionChains(SF.getDriver())
 SF.getDriver().get("https://www.google.com/gmail/")
-SF.getDriver().implicitly_wait(10)
+SF.getDriver().implicitly_wait(15)
 
 SF.inputs("//input[@type='email']", Gmail())
 SF.tabEnter(3)
@@ -51,7 +51,7 @@ SF.inputs("//input[@type='email']", Hotmail())
 SF.tabEnter(2)
 SF.inputs("//input[@type='password']", Hotmail_password())
 SF.tabEnter(3)
-sleep(20)
+sleep(4)
 SF.newTab("https://www.fireeye.com/cyber-map/threat-map.html", 2)
 
 while True:
@@ -60,8 +60,10 @@ while True:
     counter = counter + 1
     if counter > 2:
         counter = 0
-    if int(TM.getDateTime()['currentTime']) >= 1000 and int(TM.getDateTime()['currentTime']) <= 1510:
-        SF.newTab(TM.checkDays(TM.getDateTime()['currentDay']), 3)
+    if int(TM.getDateTime()['currentTime']) >= 700 and int(TM.getDateTime()['currentTime']) <= 710:
+        website = TM.checkDays(TM.getDateTime()['currentDay'])
+
+
 
 
 

@@ -12,8 +12,8 @@ class Functions:
     def inputs(self, xpath, inputs):
         elem = driver.find_element_by_xpath(xpath)
         elem.send_keys(inputs)
-        sleep(2)
-        driver.implicitly_wait(2)
+        sleep(5)
+        driver.implicitly_wait(5)
 
     def tabEnter(self, number):
         action = ActionChains(driver)
@@ -31,4 +31,11 @@ class Functions:
     def getDriver(self):
         getDriver = driver
         return getDriver
+
+    def newBrowser(self, website):
+        chrome_option = Options()
+        chrome_option.add_argument("--disable-infobars")
+        driver = webdriver.Chrome(executable_path="C:\\Selenium\\chromedriver.exe", chrome_options=chrome_option)
+        driver.get(website)
+
 

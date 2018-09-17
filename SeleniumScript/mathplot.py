@@ -1,34 +1,39 @@
-import numpy as numpy
-import matplotlib.pyplot as mathplot
-import pandas as pandas
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import linear_model
+# This is the test set, it's a straight line with some Gaussian noise
+xmin, xmax = -10, 10
+n_samples = 100
+np.random.seed(0)
+X = np.random.normal(size = n_samples)
+y = (X > 0).astype(np.float)
+X[X > 0] *= 4
+X += .3 * np.random.normal(size = n_samples)
+X = X[:, np.newaxis]
 
-# Compute the x and y coordinates for points on a sine curve
-x = numpy.arange(0, 3 * numpy.pi, 0.1)
-y = numpy.sin(x)
-mathplot.title("sine wave form")
+# run the classifier
+clf = linear_model.LogisticRegression(C=1e5)
+clf.fit(X, y)
 
-# Plot the points using matplotlib
-mathplot.plot(x, y)
-mathplot.show()
-
-#random scatter
-df = pandas.DataFrame(numpy.random.rand(50, 4), columns=['a', 'b', 'c', 'd'])
-df.plot.scatter(x='a', y='b')
-mathplot.title("random scatter")
-mathplot.show()
-
-#Line chart
-x = numpy.arange(0, 10)
-y = x ^ 2
-#Labeling the Axes and Title
-mathplot.title("Graph Drawing")
-mathplot.xlabel("Time")
-mathplot.ylabel("Distance")
-
-# Formatting the line colors
-mathplot.plot(x, y, 'r')
-
-# Formatting the line type
-mathplot.plot(x, y, '>')
-mathplot.show()
-
+# and plot the result
+plt.figure(1, figsize = (4, 3))
+plt.clf()
+plt.scatter(X.ravel(), y, color='black', zorder=20)
+X_test = np.linspace(-10, 10, 300)
+def model(x):
+    return 1 / (1 + np.exp(-x))
+loss = model(X_test * clf.coef_ + clf.intercept_).ravel()
+plt.plot(X_test, loss, color='blue', linewidth=3)
+ols = linear_model.LinearRegression()
+ols.fit(X, y)
+plt.plot(X_test, ols.coef_ * X_test + ols.intercept_, linewidth=1)
+plt.axhline(.5, color='.5')
+plt.ylabel('y')
+plt.xlabel('X')
+plt.xticks(range(-10, 10))
+plt.yticks([0, 0.5, 1])
+plt.ylim(-.25, 1.25)
+plt.xlim(-4, 10)
+plt.legend(('Logistic Regression Model', 'Linear Regression Model'),
+loc="lower right", fontsize='small')
+plt.show()
