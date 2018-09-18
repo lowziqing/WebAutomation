@@ -6,6 +6,21 @@ from SeleniumScript import SeleniumFunctions
 from SeleniumScript import TimeManager
 from SeleniumScript import LoginManager
 from selenium.webdriver.common.action_chains import ActionChains
+from apscheduler import triggers
+
+from apscheduler.schedulers.blocking import BlockingScheduler
+
+
+def job_function():
+    print "Hello World"
+
+sched = BlockingScheduler()
+
+# Schedules job_function to be run on the third Friday
+# of June, July, August, November and December at 00:00, 01:00, 02:00 and 03:00
+sched.add_job(job_function, 'cron', hour=10, minute= 48)
+
+sched.start()
 
 # Calling modules from other files
 Com = PYCCompiler.Compiler()
@@ -15,8 +30,6 @@ now = datetime.datetime.now()
 Com.compileCredentials()
 Credentials = LoginManager.getLogin()
 
-print Credentials['username']
-print Credentials['password']
 
 # instantiate object to call PYC file
 # s = open('SeleniumScript/Credentials.pyc', 'rb')
@@ -34,14 +47,11 @@ counter = 0
 # Calling google chrome and inputting website.
 actions = ActionChains(SF.getDriver())
 # SF.getDriver().get("https://www.google.com/gmail/")
-SF.getDriver().get("https://siem.chevron.com")
-SF.getDriver().maximize_window()
+SF.getDriver().get("https://infosecindustry.com/alerts-grid/")
 SF.getDriver().implicitly_wait(15)
 
-SF.newTab("https://hlspsl01.hou150.chevrontexaco.net:8000", 1)
-SF.newTab("https://hlspsl01.hou150.chevrontexaco.net:8000", 2)
-SF.newTab("https://www.fireeye.com/cyber-map/threat-map.html", 3)
-SF.newTab("https://cybermap.kaspersky.com/", 4)
+SF.newTab("https://www.fireeye.com/cyber-map/threat-map.html", 1)
+SF.newTab("https://cybermap.kaspersky.com/", 2)
 
 # SF.inputs("//input[@type='email']", Gmail())
 # SF.tabEnter(3)
@@ -68,9 +78,9 @@ SF.newTab("https://cybermap.kaspersky.com/", 4)
 
 while True:
     SF.getDriver().switch_to.window(SF.getDriver().window_handles[counter])
-    sleep(5)
+    sleep(10)
     counter = counter + 1
-    if counter > 4:
+    if counter > 3:
         counter = 0
     if int(TM.getDateTime()['currentTime']) >= 700 and int(TM.getDateTime()['currentTime']) <= 710:
         website = TM.checkDays(TM.getDateTime()['currentDay'])

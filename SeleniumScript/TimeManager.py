@@ -24,6 +24,6 @@ class TimeManager:
 
 
 TM = TimeManager()
-print TM.checkDays("Monday")
+print(TM.checkDays("Monday"))
 
 
