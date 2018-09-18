@@ -20,10 +20,10 @@ class TimeManager:
             'Saturday': "https://www.youtube.com/watch?v=WS93LMcRGRk",
             'Sunday': "https://www.youtube.com/watch?v=WS93LMcRGRk"
         }
-        website = websites.get(self, days)
-        return website
+        return websites.get(days)
 
 
-
+TM = TimeManager()
+print TM.checkDays("Monday")
 
 
