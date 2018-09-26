@@ -23,7 +23,9 @@ class TimeManager:
         return websites.get(days)
 
 
-TM = TimeManager()
-print(TM.checkDays("Monday"))
+
+
+
+
 
 

@@ -1,104 +1,98 @@
-import marshal
-import datetime
 from time import sleep
-from SeleniumScript import PYCCompiler
-from SeleniumScript import SeleniumFunctions
-from SeleniumScript import TimeManager
-from SeleniumScript import LoginManager
-from selenium.webdriver.common.action_chains import ActionChains
-from apscheduler import triggers
-
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import *
 
 
-def job_function():
-    print "Hello World"
+def main():
 
-sched = BlockingScheduler()
+    global condition
+    condition = True
 
-# Schedules job_function to be run on the third Friday
-# of June, July, August, November and December at 00:00, 01:00, 02:00 and 03:00
-sched.add_job(job_function, 'cron', hour=10, minute= 48)
+    from SeleniumScript import SeleniumFunctions
+    from SeleniumScript import LoginManager
+    from SeleniumScript import TimeManager
+    TM = TimeManager.TimeManager()
+    sf = SeleniumFunctions.Functions()
+    credentials = LoginManager.get_login()
 
-sched.start()
+    def execute_schedule():
+        day = TM.getDateTime()['currentDay']
+        website = TM.checkDays(day)
+        global condition
+        sf.newBrowser(website)
+        condition = True
 
-# Calling modules from other files
-Com = PYCCompiler.Compiler()
-SF = SeleniumFunctions.Functions()
-TM = TimeManager.TimeManager()
-now = datetime.datetime.now()
-Com.compileCredentials()
-Credentials = LoginManager.getLogin()
+    def set_false():
+        global condition
+        condition = False
 
+    def tick():
+        print('Tick! The time is: %s' % datetime.now())
 
-# instantiate object to call PYC file
-# s = open('SeleniumScript/Credentials.pyc', 'rb')
-# s.seek(8)
-# code_object = marshal.load(s)
-# exec code_object
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(tick, 'interval', seconds=3)
+    scheduler.start()
 
-# variables for Gmail input
-# Emails = "matthew3169@gmail.com"
-# Subject = "Project on Automation" + TM.getDateTime()['currentDateTime']
-# Message = "Good Evening Zi Qing, If you receive this email it would mean that the automation is executed " \
-#           "successfully. Thank you Warm Regards, Low Zi Qing"
-counter = 0
+    # schedule = BackgroundScheduler()
+    # schedule.add_job(set_false, 'cron', hour=9, minute=16)
+    # schedule.add_job(LoginManager.reminder, 'cron', hour=9, minute=16)
+    # schedule.add_job(execute_schedule, 'cron', hour=9, minute=18)
+    # schedule.start()
 
-# Calling google chrome and inputting website.
-actions = ActionChains(SF.getDriver())
-# SF.getDriver().get("https://www.google.com/gmail/")
-SF.getDriver().get("https://infosecindustry.com/alerts-grid/")
-SF.getDriver().implicitly_wait(15)
+    # getting the browser
+    sf.getDriver().get("https://infosecindustry.com/alerts-grid/")
+    sf.getDriver().maximize_window()
+    sf.getDriver().implicitly_wait(15)
+    sf.newTab("https://www.fireeye.com/cyber-map/threat-map.html")
+    sf.newTab("https://cybermap.kaspersky.com/")
 
-SF.newTab("https://www.fireeye.com/cyber-map/threat-map.html", 1)
-SF.newTab("https://cybermap.kaspersky.com/", 2)
+    # # actual code
+    # sf.getDriver().set_window_size(2900, 2100)
+    # sf.getDriver().get("https://siem.chevron.com")
+    # sf.getDriver().implicitly_wait(15)
+    # sf.inputs("//input[@type='text']", credentials['username'])
+    # sf.inputs("//input[@type='password']", credentials['password'])
+    # sf.tabEnter(1)
+    #
+    # # FirePower Sensor
+    # sf.newTab(
+    #     "https://hlspsl01.hou150.chevrontexaco.net:8000/en-US/account/login?return_to=%2Fen-US%2Fapp%2Fcvx_security%2Ffireeye_sensor_dashboard#en-US/account/login?return_to=%2Fen-US%2Fapp%2Fcvx_security%2Ffireeye_sensor_dashboard")
+    # sf.inputs("//input[@type='text']", credentials['username'])
+    # sf.inputs("//input[@type='password']", credentials['password'])
+    # sf.tabEnter(1)
+    #
+    # # FireEye Sensor
+    # sf.newTab("https://hlspsl01.hou150.chevrontexaco.net:8000/en-US/app/cvx_security/firesight_sensor_dashboard")
+    #
+    # # Wildfire Alert
+    # sf.newTab("https://hlspsl01.hou150.chevrontexaco.net:8000/en-US/app/cvx_security/wildfire_alerts")
+    #
+    # # TMG Hunting
+    # sf.newTab(
+    #     "https://hlspsl01.hou150.chevrontexaco.net:8000/en-US/app/cvx_security/tmg_hunting?form.CAI_Person_token=*&form.dest_host_token=*&form.dest_ip_token=*&form.cs_User_Agent_token=*&form.src_ip_token=*&form.http_content_type_token=*")
+    #
+    # # Open DNS CnC
+    # sf.newTab("https://hlspsl01.hou150.chevrontexaco.net:8000/en-US/app/cvx_security/open_dns_cnc")
+    #
+    # # infosec industry
+    # sf.newTab("https://infosecindustry.com/alerts-grid/")
+    #
+    # # KasperSky CyberThreat
+    # sf.newTab("https://cybermap.kaspersky.com/")
 
-# SF.inputs("//input[@type='email']", Gmail())
-# SF.tabEnter(3)
-#
-# SF.inputs("//*[@id='password']/div[1]/div/div[1]/input", Gmail_password())
-# SF.tabEnter(2)
-# sleep(20)
-# SF.tabEnter(11)
-# sleep(2)
-#
-# SF.inputs("//*[@id=':q4']", Emails)
-# SF.inputs("//*[@id=':pm']", Subject)
-# SF.inputs("//*[@id=':qr']", Message)
-# SF.tabEnter(1)
-# SF.newTab("https://outlook.live.com/owa/", 1)
-#
-# SF.tabEnter(8)
-# SF.inputs("//input[@type='email']", Hotmail())
-# SF.tabEnter(2)
-# SF.inputs("//input[@type='password']", Hotmail_password())
-# SF.tabEnter(3)
-# sleep(4)
-
-
-while True:
-    SF.getDriver().switch_to.window(SF.getDriver().window_handles[counter])
-    sleep(10)
-    counter = counter + 1
-    if counter > 3:
-        counter = 0
-    if int(TM.getDateTime()['currentTime']) >= 700 and int(TM.getDateTime()['currentTime']) <= 710:
-        website = TM.checkDays(TM.getDateTime()['currentDay'])
-        SF.getDriver(website)
-
-
-
-
-
-
-#https://siem.chevron.com - Qradar
-
-# https://hlspsl01.hou150.chevrontexaco.net:8000 - Splunk with multiple dashboard
-#
-# Kaspersky/Fireeye cyberheat map
-#
-# Youtube stretchbreak
-#
-# Phishme
+    counter = 0
+    while True:
+        while condition:
+            length = len(sf.getDriver().window_handles)
+            sf.getDriver().switch_to.window(sf.getDriver().window_handles[counter])
+            sleep(30)
+            counter += 1
+            if counter >= length:
+                counter = 0
+        while not condition:
+            sleep(10)
+            print "doing other stuff"
 
 
+if __name__ == "__main__":
+    main()
